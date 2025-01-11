@@ -13,7 +13,7 @@ let operator = "";
 // console.log(operator);
 
 let numTwo = "";
-
+let result = "";
 display.textContent = numOne;
 
 // ============= FUNCTIONALITY =========================
@@ -26,22 +26,35 @@ buttons.forEach((x) =>
       numOne = "";
       numTwo = "";
       operator = "";
+      result = "";
       display.textContent = 0;
     } else if (button.id == "divide") {
       if (numTwo == "") {
         operator = button.id;
+      } else {
+        operate(numOne,numTwo,operator)
+        continueCalcs(button.id)
       }
     } else if (button.id == "multiply") {
       if (numTwo == "") {
         operator = button.id;
+      } else {
+        operate(numOne,numTwo,operator)
+        continueCalcs(button.id)
       }
     } else if (button.id == "subtract") {
       if (numTwo == "") {
         operator = button.id;
+      } else {
+        operate(numOne,numTwo,operator)
+        continueCalcs(button.id)
       }
     } else if (button.id == "add") {
       if (numTwo == "") {
         operator = button.id;
+      } else {
+        operate(numOne,numTwo,operator)
+        continueCalcs(button.id)
       }
     } else if (button.id == "comma") {
       // **** COMMA ****;
@@ -58,9 +71,14 @@ buttons.forEach((x) =>
       }
     } else if (button.id == "operator") {
       // **** OPERATOR ****
-      console.log(numOne);
-      console.log(numTwo);
+      if(numTwo=="" || !numTwo) {return}
+
+      operate(numOne,numTwo,operator)
+      display.textContent = result
+      console.log(Number(numOne));
+      console.log(Number(numTwo));
       console.log(operator);
+      console.log(result);
     } else {
       // **** DIGIT BTNS ****
       // IF numTwo IS ""
@@ -73,10 +91,35 @@ buttons.forEach((x) =>
       }
       // console.log(display.textContent);
     }
-
+    
     // console.log(button.id);
   })
 );
+
+function operate(numOne,numTwo,operator) {
+  numOne = Number(numOne)
+  numTwo = Number(numTwo)
+  if(operator=="add") {
+    result = Math.round(numOne+numTwo*100)/100
+  }
+  if(operator=="subtract") {
+    result = Math.round(numOne-numTwo*100)/100
+  }
+  if(operator=="multiply") {
+    result = Math.round(numOne*numTwo*100)/100
+  }
+  if(operator=="divide") {
+    result = Math.round(numOne/numTwo*100)/100
+  }
+  if(result.toString().length>10) result = NaN;
+  display.textContent = result
+}
+
+function continueCalcs(button){
+  numOne = result;
+  numTwo = "";
+  operator = button
+}
 
 // console.log(buttons);
 
