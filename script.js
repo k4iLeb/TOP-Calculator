@@ -58,12 +58,16 @@ buttons.forEach((x) =>
       }
     } else if (button.id == "comma") {
       // **** COMMA ****;
-      if (numTwo == "") {
+      if (numTwo == "" && !operator) {
+        if (numOne == 0) {
+          numOne = "0.";
+          display.textContent = numOne;
+        }
         if (!numOne.includes(".")) {
           numOne += ".";
           display.textContent = numOne;
         }
-      } else {
+      } else if (operator) {
         if (!numTwo.includes(".")) {
           numTwo += ".";
           display.textContent = numTwo;
@@ -76,31 +80,40 @@ buttons.forEach((x) =>
       }
 
       operate(numOne, numTwo, operator);
-      // display.textContent = result;
       operator = "";
-      // console.log(`numOne :${Number(numOne)}`);
-      // console.log(`numOne :${Number(numTwo)}`);
-      // console.log(`operator :${operator}`);
-      // console.log(`result :${result}`);
+    } else if (button.id == "backspace") {
+      // **** BACKSPACE ****
+      if (numOne && !operator && !result) {
+        numOne = numOne.slice(0, numOne.length - 1);
+        display.textContent = numOne;
+      }
+      if (numTwo && operator) {
+        numTwo = numTwo.slice(0, numTwo.length - 1);
+        display.textContent = numTwo;
+      }
     } else {
       // **** DIGIT BTNS ****
       // IF numTwo IS ""
       if (numTwo == "" && !operator && !result) {
-        numOne += button.id;
-        display.textContent = numOne;
+        if (numOne.toString().length < 8) {
+          if (
+            numOne.toString().startsWith("0") &&
+            !numOne.toString().includes(".")
+          ) {
+            numOne = button.id;
+            display.textContent = numOne;
+          } else {
+            numOne += button.id;
+            display.textContent = numOne;
+          }
+        }
+      } else if (operator) {
+        if (numTwo.toString().length < 8) {
+          numTwo += button.id;
+          display.textContent = numTwo;
+        }
       }
-      // else if (numOne != "" && operator) {
-      //   numTwo += button.id;
-      //   display.textContent = numTwo;
-      // }
-      else {
-        numTwo += button.id;
-        display.textContent = numTwo;
-      }
-      // console.log(display.textContent);
     }
-
-    // console.log(button.id);
   })
 );
 
@@ -108,19 +121,24 @@ function operate(numOne, numTwo, operator) {
   numOne = Number(numOne);
   numTwo = Number(numTwo);
   if (operator == "add") {
-    result = (Math.round(numOne + numTwo) * 100) / 100;
+    result = (numOne + numTwo).toFixed(2);
   }
   if (operator == "subtract") {
-    result = (Math.round(numOne - numTwo) * 100) / 100;
+    result = (numOne - numTwo).toFixed(2);
   }
   if (operator == "multiply") {
-    result = (Math.round(numOne * numTwo) * 100) / 100;
+    result = (numOne * numTwo).toFixed(2);
   }
   if (operator == "divide") {
-    result = (Math.round(numOne / numTwo) * 100) / 100;
+    if (numTwo == 0) {
+      alert("Can't Divide by 0!");
+      result = numOne;
+    } else {
+      result = (numOne / numTwo).toFixed(2);
+    }
   }
   numOne = result;
-  if (numOne.toString().length > 10) numOne = NaN;
+  if (numOne.toString().length > 20) numOne = NaN;
   display.textContent = numOne;
 }
 
@@ -129,8 +147,6 @@ function continueCalcs(button) {
   numTwo = "";
   operator = button;
 }
-
-// console.log(buttons);
 
 // ================ BUTTON EFFECTS =================
 // **** MOUSEDOWN & MOUSEUP ANIMATIONS ****
@@ -186,24 +202,3 @@ calcBtns.forEach((button) =>
     }
   })
 );
-
-// calcBtns.forEach((button) => {
-//   button.addEventListener("mouseup", () => {
-//     button.setAttribute("style", "box-shadow: 0");
-//     console.log(button.style);
-
-//     // if (x.id != "operator") {
-//     //   console.log(button);
-//     // }
-//   });
-// });
-
-// const operBtn = [...buttons].filter((x) =>
-//   x.classList.contains("operator-btn")
-// );
-
-// console.log(operBtn);
-
-// operBtn.addEventListener("click", () => {
-//   console.log(hi);
-// });
